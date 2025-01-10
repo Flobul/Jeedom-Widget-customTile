@@ -19,6 +19,9 @@ Provides a tile for a command inside the equipment tile.
 - width : `NNpx (Largeur de la tuile)`
 - height : `NNpx (Hauteur de la tuile)`
 - borderradius : `NNpx (Taille de l'arrondi de la tuile)`
+- bordercolor : `rgb(20,20,20) ({{Couleur de la bordure}})`
+- borderwidth : `NNpx ({{Épaisseur de la bordure}})`
+- borderstyle : `solid ({{Style de la bordure}})`
 - margin : `NNpx (Marge entre le titre/valeur et le haut/bas)`
 - time : `duration|date (Affiche durée ou date de la valeur)`
 
