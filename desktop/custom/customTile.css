@@ -1,0 +1,167 @@
+:root {
+	--customtile-jeedom-heating: 46, 98, 138;
+	--customtile-jeedom-security: 145, 65, 60;
+	--customtile-jeedom-energy: 50, 120, 60;
+	--customtile-jeedom-light: 153, 100, 40;
+	--customtile-jeedom-opening: 58, 58, 58;
+	--customtile-jeedom-automatism: 100, 100, 100;
+	--customtile-jeedom-multimedia: 54, 73, 94;
+	--customtile-jeedom-default: 58, 90, 85;
+
+	--customtile-analogues-heating: 46, 138, 138;
+	--customtile-analogues-security: 145, 85, 85;
+	--customtile-analogues-energy: 85, 120, 85;
+	--customtile-analogues-light: 153, 140, 60;
+	--customtile-analogues-opening: 78, 78, 78;
+	--customtile-analogues-automatism: 120, 120, 120;
+	--customtile-analogues-multimedia: 73, 103, 123;
+	--customtile-analogues-default: 78, 110, 105;
+
+	--customtile-complementaires-heating: 138, 46, 46;
+	--customtile-complementaires-security: 65, 145, 145;
+	--customtile-complementaires-energy: 120, 60, 60;
+	--customtile-complementaires-light: 153, 80, 40;
+	--customtile-complementaires-opening: 78, 58, 58;
+	--customtile-complementaires-automatism: 120, 100, 100;
+	--customtile-complementaires-multimedia: 73, 54, 94;
+	--customtile-complementaires-default: 90, 58, 85;
+
+	--customtile-monochromatiques-heating: 46, 78, 138;
+	--customtile-monochromatiques-security: 145, 85, 60;
+	--customtile-monochromatiques-energy: 50, 100, 60;
+	--customtile-monochromatiques-light: 153, 80, 40;
+	--customtile-monochromatiques-opening: 58, 48, 58;
+	--customtile-monochromatiques-automatism: 100, 80, 100;
+	--customtile-monochromatiques-multimedia: 54, 63, 94;
+	--customtile-monochromatiques-default: 58, 70, 85;
+
+	--customtile-foncees-heating: 23, 49, 69;
+	--customtile-foncees-security: 72, 32, 30;
+	--customtile-foncees-energy: 25, 60, 30;
+	--customtile-foncees-light: 76, 50, 20;
+	--customtile-foncees-opening: 29, 29, 29;
+	--customtile-foncees-automatism: 50, 50, 50;
+	--customtile-foncees-multimedia: 27, 36, 47;
+	--customtile-foncees-default: 29, 45, 42;
+
+	--customtile-pastel-heating: 173, 216, 230;
+	--customtile-pastel-security: 255, 182, 193;
+	--customtile-pastel-energy: 144, 238, 144;
+	--customtile-pastel-light: 255, 255, 224;
+	--customtile-pastel-opening: 224, 255, 255;
+	--customtile-pastel-automatism: 211, 211, 211;
+	--customtile-pastel-multimedia: 240, 230, 140;
+	--customtile-pastel-default: 255, 239, 213;
+
+	--customtile-vives-heating: 0, 0, 255;
+	--customtile-vives-security: 255, 0, 0;
+	--customtile-vives-energy: 0, 255, 0;
+	--customtile-vives-light: 255, 255, 0;
+	--customtile-vives-opening: 0, 0, 0;
+	--customtile-vives-automatism: 128, 128, 128;
+	--customtile-vives-multimedia: 0, 0, 128;
+	--customtile-vives-default: 0, 100, 0;
+
+	--customtile-terre-heating: 139, 69, 19;
+	--customtile-terre-security: 85, 107, 47;
+	--customtile-terre-energy: 210, 180, 140;
+	--customtile-terre-light: 240, 230, 140;
+	--customtile-terre-opening: 70, 130, 180;
+	--customtile-terre-automatism: 139, 69, 19;
+	--customtile-terre-multimedia: 70, 130, 180;
+	--customtile-terre-default: 139, 69, 19;
+
+	--customtile-type1-heating: 58, 134, 255;
+	--customtile-type1-security: 253, 43, 59;
+	--customtile-type1-energy: 253, 138, 9;
+	--customtile-type1-light: 255, 190, 11;
+	--customtile-type1-opening: 251, 86, 7;
+	--customtile-type1-automatism: 131, 56, 236;
+	--customtile-type1-multimedia: 95, 95, 246;
+	--customtile-type1-default: 255, 0, 110;
+
+	--customtile-type2-heating: 38, 70, 83;
+	--customtile-type2-security: 231, 111, 81;
+	--customtile-type2-energy: 138, 177, 125;
+	--customtile-type2-light: 233, 196, 106;
+	--customtile-type2-opening: 40, 114, 113;
+	--customtile-type2-automatism: 42, 157, 143;
+	--customtile-type2-multimedia: 239, 179, 102;
+	--customtile-type2-default: 39, 92, 98;
+
+	--customtile-type3-heating: 160, 196, 255;
+	--customtile-type3-security: 255, 173, 173;
+	--customtile-type3-energy: 202, 255, 191;
+	--customtile-type3-light: 253, 255, 182;
+	--customtile-type3-opening: 255, 214, 165;
+	--customtile-type3-automatism: 189, 178, 255;
+	--customtile-type3-multimedia: 155, 246, 255;
+	--customtile-type3-default: 255, 198, 255;
+
+	--customtile-type4-heating: 255, 99, 71;
+	--customtile-type4-security: 255, 69, 0;
+	--customtile-type4-energy: 124, 252, 0;
+	--customtile-type4-light: 255, 215, 0;
+	--customtile-type4-opening: 0, 191, 255;
+	--customtile-type4-automatism: 75, 0, 130;
+	--customtile-type4-multimedia: 255, 20, 147;
+	--customtile-type4-default: 255, 105, 180;
+
+	--customtile-type5-heating: 255, 182, 193;
+	--customtile-type5-security: 240, 128, 128;
+	--customtile-type5-energy: 144, 238, 144;
+	--customtile-type5-light: 173, 216, 230;
+	--customtile-type5-opening: 224, 255, 255;
+	--customtile-type5-automatism: 255, 228, 196;
+	--customtile-type5-multimedia: 255, 239, 213;
+	--customtile-type5-default: 255, 250, 205;
+
+}
+
+.cmd[data-template="customtile"] .customTile {
+	border-radius: 25px;
+	background: grey;
+	height: 100px;
+	width: 120px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.cmd[data-template="customtile"] .customTile .title {
+	margin-top: 10%;
+	font-size: 1.5em;
+	text-align: center;
+}
+
+.cmd[data-template="customtile"] .customTile .title .cmdName {
+	color: white;
+}
+
+.cmd[data-template="customtile"] .customTile .state {
+	margin-bottom: 10%;
+	text-align: center;
+}
+
+.cmd[data-template="customtile"] .customTile .state .value {
+	font-size: 3em;
+	color: white;
+}
+
+.cmd[data-template="customtile"] .customTile .state .unit {
+	font-size: 1em;
+	color: white;
+}
+
+.cmd[data-template="customtile"] .customTile .title .cmdName {
+	color: white;
+}
+
+.cmd[data-template="customtile"] .customTile .execute {
+	margin-bottom: 10%;
+	text-align: center;
+}
+
+.cmd[data-template="customtile"] .customTile .execute>i {
+	font-size: 2em;
+}
