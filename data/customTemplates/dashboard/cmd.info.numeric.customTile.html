@@ -11,10 +11,9 @@
     <span title="{{Minimum}}" class="tooltips">#minHistoryValue#</span>|<span title="{{Moyenne}}" class="tooltips">#averageHistoryValue#</span>|<span title="{{Maximum}}" class="tooltips">#maxHistoryValue#</span> <i class="#tendance#"></i>
   </div>
   <template>
-    <div>transparency : 0-1 ({{Transparence de la couleur de fond}})</div>
-    <div>masterpreset : ({{sélection du preset dans configuration CSS additionnel}})</div>
-    <div>preset : heating/security/energy/light/opening/automatism/multimedia/default ({{Preset de catégorie de la commande (annule la couleur)}})</div>
-    <div>colortype : jeedom/analogues/complementaires/monochromatiques/foncees/pastel/vives ({{Type de couleur du preset}})</div>
+    <div>transparency : 0|1 ({{Transparence de la couleur de fond}})</div>
+    <div>preset : heating|security|energy|light|opening|automatism|multimedia|default ({{Preset de catégorie de la commande (annule la couleur)}})</div>
+    <div>colortype : jeedom|analogues|complementaires|monochromatiques|foncees|pastel|vives|terre|type1|type2|type3|type4|type5 ({{Type de couleur du preset}})</div>
     <div>color : rgb(20,20,20) ({{Couleur de fond}})</div>
     <div>titlefontcolor : rgb(20,20,20) ({{Couleur du texte du titre}})</div>
     <div>valuefontcolor : rgb(20,20,20) ({{Couleur du texte de la valeur}})</div>
@@ -26,7 +25,9 @@
     <div>width : NNpx ({{Largeur de la tuile}})</div>
     <div>height : NNpx ({{Hauteur de la tuile}})</div>
     <div>borderradius : NNpx ({{Taille de l'arrondi de la tuile}})</div>
-    <div>margin : NNpx ({{Marge entre le titre/valeur et le haut/bas}})</div>
+    <div>bordercolor : rgb(20,20,20) ({{Couleur de la bordure}})</div>
+    <div>borderwidth : NNpx ({{Épaisseur de la bordure}})</div>
+    <div>borderstyle : solid ({{Style de la bordure}})</div>    <div>margin : NNpx ({{Marge entre le titre/valeur et le haut/bas}})</div>
     <div>time : duration|date ({{Affiche durée ou date de la valeur}})</div>
   </template>
   <script>
@@ -111,6 +112,15 @@
     }
     if (domUtils.issetWidgetOptParam('#borderradius#', 'borderradius')) {
       document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile').style.setProperty('border-radius', '#borderradius#', 'important')
+    }
+    if (domUtils.issetWidgetOptParam('#bordercolor#', 'bordercolor')) {
+      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile').style.setProperty('border-color', '#bordercolor#', 'important')
+    }
+    if (domUtils.issetWidgetOptParam('#borderwidth#', 'borderwidth')) {
+      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile').style.setProperty('border-width', '#borderwidth#', 'important')
+    }
+    if (domUtils.issetWidgetOptParam('#borderstyle#', 'borderstyle')) {
+      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile').style.setProperty('border-style', '#borderstyle#', 'important')
     }
     if (domUtils.issetWidgetOptParam('#margin#', 'margin')) {
       document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile .state').style.setProperty('margin-bottom', '#margin#', 'important')
