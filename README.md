@@ -39,11 +39,20 @@ You can customize the appearance of the tile using the following options:
 - **time**: `duration | date` (Displays duration or date of the value)
 
 ## Installation
-Copy:
-- html file(s) in data/customTemplates/dashboard/,
-- and css file in desktop/custom/
+To install the custom tile widget, follow these steps:
+
+1. Copy the HTML file(s) to `data/customTemplates/dashboard/`.
+2. Copy the CSS file to `desktop/custom/`.
 
 ## Preset palette
+Here is the color palette used for the presets:
 
 ![Palette](/img/palette.jpg)
 
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE file](/LICENSE) for details.
+
+Feel free to customize and extend the widget as needed to fit your requirements.
+If you encounter any issues or have suggestions for improvements, please open an issue or submit a pull request.
