@@ -4,7 +4,13 @@
     <div class="title #hide_name#">
       <div class="cmdName">#name_display#</div>
     </div>
-    <div class="state"><span class="value"></span> <span class="unit"></span></div>
+    <div class="state">
+      <span class="value">
+        <span class="int"></span>
+        <span class="sep"></span>
+        <span class="dec"></span>
+      </span> <span class="unit"></span>
+    </div>
   </div>
   <div class="timeCmd label label-default #history#" data-type="info"></div>
   <div class="cmdStats #hide_history#">
@@ -15,38 +21,59 @@
     <div>preset : heating|security|energy|light|opening|automatism|multimedia|default ({{Preset de catégorie de la commande (annule la couleur)}})</div>
     <div>colortype : jeedom|analogues|complementaires|monochromatiques|foncees|pastel|vives|terre|type1|type2|type3|type4|type5 ({{Type de couleur du preset}})</div>
     <div>color : rgb(20,20,20) ({{Couleur de fond}})</div>
+    <div>separator : .|, ({{Séparateur entier-décimal}})</div>
     <div>titlefontcolor : rgb(20,20,20) ({{Couleur du texte du titre}})</div>
-    <div>valuefontcolor : rgb(20,20,20) ({{Couleur du texte de la valeur}})</div>
+    <div>valueintfontcolor : rgb(20,20,20) ({{Couleur du texte de la valeur entière}})</div>
+    <div>valuesepfontcolor : rgb(20,20,20) ({{Couleur du texte du séparateur des valeurs}})</div>
+    <div>valuedecfontcolor : rgb(20,20,20) ({{Couleur du texte de la valeur décimale}})</div>
     <div>unitfontcolor : rgb(20,20,20) ({{Couleur du texte de l'unité}})</div>
     <div>titlefontsize : NNpx ({{Taille de la police du titre}})</div>
-    <div>valuefontsize : NNpx ({{Taille de la police de la valeur}})</div>
+    <div>valueintfontsize : NNpx ({{Taille de la police de la valeur entière}})</div>
+    <div>valuesepfontsize : NNpx ({{Taille de la police du séparateur des valeurs}})</div>
+    <div>valuedecfontsize : NNpx ({{Taille de la police de la valeur décimale}})</div>
     <div>unitfontsize : NNpx ({{Taille de la police de l'unité}})</div>
     <div>padding : NNpx ({{Taille de la tuile}})</div>
     <div>width : NNpx ({{Largeur de la tuile}})</div>
     <div>height : NNpx ({{Hauteur de la tuile}})</div>
+    <div>blink : int|sep|dec|* ({{Fait clignoter la valeur entière/séparateur/décimale/tout à sa mise à jour}})</div>
     <div>borderradius : NNpx ({{Taille de l'arrondi de la tuile}})</div>
     <div>bordercolor : rgb(20,20,20) ({{Couleur de la bordure}})</div>
     <div>borderwidth : NNpx ({{Épaisseur de la bordure}})</div>
     <div>borderstyle : solid ({{Style de la bordure}})</div>    <div>margin : NNpx ({{Marge entre le titre/valeur et le haut/bas}})</div>
+    <div>style: ({{style CSS de la valeur}})</div>
     <div>time : duration|date ({{Affiche durée ou date de la valeur}})</div>
   </template>
   <script>
     jeedom.cmd.addUpdateFunction('#id#', function(_options) {
       if (is_object(cmd = document.querySelector('.cmd[data-cmd_uid="#uid#"]'))) {
+        var integer = Math.floor(_options.display_value);
+        var decimal = Math.round((_options.display_value % 1) * 100);
+        var separator = '.';
+        if (domUtils.issetWidgetOptParam('#separator#', 'separator')) {
+            separator = '#separator#';
+        }
         cmd.querySelector('.content').setAttribute('title', '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate)
         if ('#time#' == 'duration' || '#time#' == 'date') {
           jeedom.cmd.displayDuration(_options.valueDate, cmd.querySelector('.timeCmd'), '#time#')
         }
 
         if (is_numeric(_options.value)) {
-          cmd.querySelector('.value').innerHTML = _options.display_value
+          cmd.querySelector('.value .int').innerHTML = integer;
+          cmd.querySelector('.value .sep').innerHTML = separator;
+          cmd.querySelector('.value .dec').innerHTML = decimal;
           cmd.querySelector('.unit').innerHTML = _options.unit
         } else {
-          cmd.querySelector('.value').innerHTML = '<span class="label label-danger">' + _options.value + '</span>'
+          cmd.querySelector('.value .int').innerHTML = '<span class="label label-danger">' + _options.value + '</span>';
+          cmd.querySelector('.value .sep').innerHTML = '';
+          cmd.querySelector('.value .dec').innerHTML = '';
         }
 
         if (domUtils.issetWidgetOptParam('#blink#', 'blink')) {
-          var valueEle = cmd.querySelector('.value');
+          if ('#blink#' == 'int' || '#blink#' == 'sep' || '#blink#' == 'dec') {
+              var valueEle = cmd.querySelector('.value .#blink#');
+          } else {
+              var valueEle = cmd.querySelector('.value');              
+          }
           valueEle.style.color = 'var(--logo-primary-color)'
           setTimeout(function() {
             valueEle.style.color = null
@@ -54,10 +81,24 @@
           }, 1000);
         }
 
+        if (domUtils.issetWidgetOptParam('#style#', 'style')) {
+          var styles = '#style#'.split(';');
+          styles.forEach(style => {
+            let [property, value] = style.split(':');
+              if (property && value) {
+                cmd.querySelector('.value').style.setProperty(property.trim(), value.trim(), 'important');
+              }
+          });
+        }
+
         if (_options.alertLevel == 'warning') {
-          cmd.querySelector('.value').innerHTML = '<span class="label label-warning"><i class="fas fa-bell"></i> ' + _options.value + '</span>'
+          cmd.querySelector('.value .int').innerHTML = '<span class="label label-warning"><i class="fas fa-bell"></i> ' + _options.value + '</span>';
+          cmd.querySelector('.value .sep').innerHTML = '';
+          cmd.querySelector('.value .dec').innerHTML = '';
         } else if (_options.alertLevel == 'danger') {
-          cmd.querySelector('.value').innerHTML = '<span class="label label-danger"><i class="fas fa-exclamation"></i> ' + _options.value + '</span>'
+          cmd.querySelector('.value .int').innerHTML = '<span class="label label-danger"><i class="fas fa-exclamation"></i> ' + _options.value + '</span>';
+          cmd.querySelector('.value .sep').innerHTML = '';
+          cmd.querySelector('.value .dec').innerHTML = '';
         }
       }
     })
@@ -65,29 +106,34 @@
     jeedom.cmd.refreshValue([{ cmd_id: '#id#', value: '#value#', display_value: '#state#', valueDate: '#valueDate#', collectDate: '#collectDate#', alertLevel: '#alertLevel#', unit: '#unite#' }])
 
     if (domUtils.issetWidgetOptParam('#preset#', 'preset')) {
-        var colortype = 'jeedom';
-        if (domUtils.issetWidgetOptParam('#colortype#', 'colortype')) {
-            colortype = '#colortype#';
-        }
+      var colortype = 'jeedom';
+      if (domUtils.issetWidgetOptParam('#colortype#', 'colortype')) {
+        colortype = '#colortype#';
+      }
 
-        if (domUtils.issetWidgetOptParam('#transparency#', 'transparency')) {
-            var color = `rgba(var(--customtile-${colortype}-#preset#),#transparency#)`;
-        } else {
-            var color = `rgba(var(--customtile-${colortype}-#preset#),1)`;
-        }
-        if (!color) {
-            color = 'rgb(255, 255, 255)'; // Couleur par défaut si non défini
-        }
-
-        document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile').style.setProperty('background-color', color, 'important');
+      if (domUtils.issetWidgetOptParam('#transparency#', 'transparency')) {
+        var color = `rgba(var(--customtile-${colortype}-#preset#),#transparency#)`;
+      } else {
+        var color = `rgba(var(--customtile-${colortype}-#preset#),1)`;
+      }
+      if (!color) {
+        color = 'rgb(255, 255, 255)';
+      }
+      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile').style.setProperty('background-color', color, 'important');
     } else if (domUtils.issetWidgetOptParam('#color#', 'color')) {
-        document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile').style.setProperty('background-color', '#color#', 'important');
+      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile').style.setProperty('background-color', '#color#', 'important');
     }
     if (domUtils.issetWidgetOptParam('#titlefontcolor#', 'titlefontcolor')) {
       document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile .title').style.setProperty('color', '#titlefontcolor#', 'important')
     }
-    if (domUtils.issetWidgetOptParam('#valuefontcolor#', 'valuefontcolor')) {
-      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile .state .value').style.setProperty('color', '#valuefontcolor#', 'important')
+    if (domUtils.issetWidgetOptParam('#valueintfontcolor#', 'valueintfontcolor')) {
+      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile .state .value .int').style.setProperty('color', '#valueintfontcolor#', 'important')
+    }
+    if (domUtils.issetWidgetOptParam('#valuesepfontcolor#', 'valuesepfontcolor')) {
+      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile .state .value .sep').style.setProperty('color', '#valuesepfontcolor#', 'important')
+    }
+    if (domUtils.issetWidgetOptParam('#valuedecfontcolor#', 'valuedecfontcolor')) {
+      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile .state .value .dec').style.setProperty('color', '#valuedecfontcolor#', 'important')
     }
     if (domUtils.issetWidgetOptParam('#unitfontcolor#', 'unitfontcolor')) {
       document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile .state .unit').style.setProperty('color', '#unitfontcolor#', 'important')
@@ -95,8 +141,14 @@
     if (domUtils.issetWidgetOptParam('#titlefontsize#', 'titlefontsize')) {
       document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile .title').style.setProperty('font-size', '#titlefontsize#', 'important')
     }
-    if (domUtils.issetWidgetOptParam('#valuefontsize#', 'valuefontsize')) {
-      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile .state .value').style.setProperty('font-size', '#valuefontsize#', 'important')
+    if (domUtils.issetWidgetOptParam('#valueintfontsize#', 'valueintfontsize')) {
+      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile .state .value .int').style.setProperty('font-size', '#valueintfontsize#', 'important')
+    }
+    if (domUtils.issetWidgetOptParam('#valuesepfontsize#', 'valuesepfontsize')) {
+      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile .state .value .sep').style.setProperty('font-size', '#valuesepfontsize#', 'important')
+    }
+    if (domUtils.issetWidgetOptParam('#valuedecfontsize#', 'valuedecfontsize')) {
+      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile .state .value .dec').style.setProperty('font-size', '#valuedecfontsize#', 'important')
     }
     if (domUtils.issetWidgetOptParam('#unitfontsize#', 'unitfontsize')) {
       document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile .state .unit').style.setProperty('font-size', '#unitfontsize#', 'important')
