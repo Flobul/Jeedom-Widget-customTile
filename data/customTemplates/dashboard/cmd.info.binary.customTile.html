@@ -1,0 +1,195 @@
+<div class="cmd cmd-widget #history#" data-type="info" data-subtype="binary" data-template="customtile" data-cmd_id="#id#" data-cmd_uid="#uid#" data-version="#version#" data-eqLogic_id="#eqLogic_id#">
+  <link type="text/css" rel="stylesheet" href="core/php/getCSS.php?file=desktop/custom/customTile.css">
+  <div class="customTile content">
+    <div class="title #hide_name#">
+      <div class="cmdName">#name_display#</div>
+    </div>
+    <span class="iconCmd"></span>
+    <div class="state">
+      <span class="value"></span>
+    </div>
+  </div>
+  <div class="timeCmd label label-default #history#" data-type="info"></div>
+  <div class="cmdStats #hide_history#">
+    <span title="{{Minimum}}" class="tooltips">#minHistoryValue#</span>|<span title="{{Moyenne}}" class="tooltips">#averageHistoryValue#</span>|<span title="{{Maximum}}" class="tooltips">#maxHistoryValue#</span> <i class="#tendance#"></i>
+  </div>
+  <template>
+    <div>transparency : 0|1 ({{Transparence de la couleur de fond}})</div>
+    <div>preset : heating|security|energy|light|opening|automatism|multimedia|default ({{Preset de catégorie de la commande (annule la couleur)}})</div>
+    <div>colortype : jeedom|analogues|complementaires|monochromatiques|foncees|pastel|vives|terre|type1|type2|type3|type4|type5 ({{Type de couleur du preset}})</div>
+    <div>color : rgb(20,20,20) ({{Couleur de fond}})</div>
+    <div>titlefontcolor : rgb(20,20,20) ({{Couleur du texte du titre}})</div>
+    <div>titlefontsize : NNpx ({{Taille de la police du titre}})</div>
+    <div>padding : NNpx ({{Taille de la tuile}})</div>
+    <div>width : NNpx ({{Largeur de la tuile}})</div>
+    <div>height : NNpx ({{Hauteur de la tuile}})</div>
+    <div>blink : int|sep|dec|* ({{Fait clignoter la valeur entière/séparateur/décimale/tout à sa mise à jour}})</div>
+    <div>borderradius : NNpx ({{Taille de l'arrondi de la tuile}})</div>
+    <div>bordercolor : rgb(20,20,20) ({{Couleur de la bordure}})</div>
+    <div>borderwidth : NNpx ({{Épaisseur de la bordure}})</div>
+    <div>borderstyle : solid ({{Style de la bordure}})</div>    <div>margin : NNpx ({{Marge entre le titre/valeur et le haut/bas}})</div>
+    <div>icon : alert|door|heat|light|lock|presence|prise|window|flood ({{icône on/off}})</div>
+    <div>style: ({{style CSS de la valeur}})</div>
+    <div>time : duration|date ({{Affiche durée ou date de la valeur}})</div>
+  </template>
+  <script>
+    jeedom.cmd.addUpdateFunction('#id#', function(_options) {
+      if (is_object(cmd = document.querySelector('.cmd[data-cmd_uid="#uid#"]'))) {
+        cmd.querySelector('.content').setAttribute('title', '{{Date de valeur}} : ' + _options.valueDate + '<br>{{Date de collecte}} : ' + _options.collectDate)
+        if ('#time#' == 'duration' || '#time#' == 'date') {
+          jeedom.cmd.displayDuration(_options.valueDate, cmd.querySelector('.timeCmd'), '#time#')
+        }
+
+        var icon_on = '<i class=\'icon_green fas fa-check\'></i>';
+        var icon_off = '<i class=\'icon_red fas fa-times\'></i>';
+        if (domUtils.issetWidgetOptParam('#icon#', 'icon')) {
+          switch (('#icon#').toLowerCase()) {
+            case 'alert': 
+              icon_on = '<i class=\'icon_green fas fa-check\'></i>';
+              icon_off = '<i class=\'icon_red icon jeedom-alerte2\'></i>';
+              break;
+            case 'door': 
+              icon_on = '<i class=\'icon_green icon jeedom-porte-ferme\'></i>';
+              icon_off = '<i class=\'icon_red icon jeedom-porte-ouverte\'></i>';
+              break;
+            case 'heat': 
+              icon_on = '<i class=\'icon_red icon jeedom-feu\'></i>';
+              icon_off = '<i class=\'fas fa-times\'></i>';
+              break;
+            case 'light': 
+              icon_on = '<i class=\'icon_yellow icon jeedom-lumiere-on\'></i>';
+              icon_off = '<i class=\'icon jeedom-lumiere-off\'></i>';
+              break;
+            case 'lock': 
+              icon_on = '<i class=\'icon jeedom-lock-ferme\'></i>';
+              icon_off = '<i class=\'icon_red icon jeedom-lock-ouvert\'></i>';
+              break;
+            case 'presence': 
+              icon_on = '<i class=\'icon_green fas fa-check\'></i>';
+              icon_off = '<i class=\'icon_red icon jeedom-mouvement\'></i>';
+              break;
+            case 'prise': 
+              icon_on = '<i class=\'icon jeedom-prise\'></i>';
+              icon_off = '<i class=\'fas fa-times\'></i>';
+              break;
+            case 'window': 
+              icon_on = '<i class=\'icon_green icon jeedom-fenetre-ferme\'></i>';
+              icon_off = '<i class=\'icon_red icon jeedom-fenetre-ouverte\'></i>';
+              break;
+            case 'flood': 
+              icon_on = '<i class=\'icon_green fas fa-tint-slash\'></i>';
+              icon_off= '<i class=\'icon_blue fas fa-tint\'></i>';
+              break;
+          }
+        }
+        if (_options.display_value == 1) {
+          cmd.setAttribute('data-state', 1)
+          cmd.querySelector('.iconCmd').innerHTML = icon_on;
+        } else if (_options.display_value == 0) {
+          cmd.setAttribute('data-state', 0)
+          cmd.querySelector('.iconCmd').innerHTML = icon_off
+        } else {
+          cmd.querySelector('.value').innerHTML = '<span class="label label-danger">' + _options.value + '</span>'
+        }
+
+        if (is_numeric('#_desktop_width_#') && is_object(img = cmd.querySelector('.iconCmd img'))) {
+          img.style.setProperty('width', '#_desktop_width_#px', 'important')
+        }
+        
+        if (domUtils.issetWidgetOptParam('#blink#', 'blink')) {
+          if ('#blink#' == 'int' || '#blink#' == 'sep' || '#blink#' == 'dec') {
+              var valueEle = cmd.querySelector('.value .#blink#');
+          } else {
+              var valueEle = cmd.querySelector('.value');              
+          }
+          valueEle.style.color = 'var(--logo-primary-color)'
+          setTimeout(function() {
+            valueEle.style.color = null
+            jeedomUtils.initTooltips()
+          }, 1000);
+        }
+
+        if (domUtils.issetWidgetOptParam('#style#', 'style')) {
+          var styles = '#style#'.split(';');
+          styles.forEach(style => {
+            var [property, value] = style.split(':');
+              if (property && value) {
+                cmd.querySelector('.value').style.setProperty(property.trim(), value.trim(), 'important');
+              }
+          });
+        }
+console.log("#_icon_on_#", "#_icon_on_#", '#_img_light_off_#')
+        if (_options.alertLevel == 'warning') {
+          cmd.querySelector('.value').innerHTML = '<span class="label label-warning"><i class="fas fa-bell"></i> ' + _options.value + '</span>';
+        } else if (_options.alertLevel == 'danger') {
+          cmd.querySelector('.value').innerHTML = '<span class="label label-danger"><i class="fas fa-exclamation"></i> ' + _options.value + '</span>';
+        }
+      }
+      document.body.addEventListener('changeThemeEvent', function() {
+        if (is_object(cmd = document.querySelector('.cmd[data-cmd_uid="#uid#"]'))) {
+          if (cmd.getAttribute('data-state') == 1) {
+            cmd.querySelector('.iconCmd').innerHTML = jeedom.widgets.getThemeImg("#_img_light_on_#", "#_img_dark_on_#")
+          } else {
+            cmd.querySelector('.iconCmd').innerHTML = jeedom.widgets.getThemeImg("#_img_light_off_#", "#_img_dark_off_#")
+          }
+
+          if (is_numeric('#_desktop_width_#') && is_object(img = cmd.querySelector('.iconCmd img'))) {
+            img.style.setProperty('width', '#_desktop_width_#px', 'important')
+          }
+        }
+      })
+    })
+
+    jeedom.cmd.refreshValue([{ cmd_id: '#id#', value: '#value#', display_value: '#state#', valueDate: '#valueDate#', collectDate: '#collectDate#', alertLevel: '#alertLevel#', unit: '#unite#' }])
+
+    if (domUtils.issetWidgetOptParam('#preset#', 'preset')) {
+      var colortype = 'jeedom';
+      if (domUtils.issetWidgetOptParam('#colortype#', 'colortype')) {
+        colortype = '#colortype#';
+      }
+
+      if (domUtils.issetWidgetOptParam('#transparency#', 'transparency')) {
+        var color = `rgba(var(--customtile-${colortype}-#preset#),#transparency#)`;
+      } else {
+        var color = `rgba(var(--customtile-${colortype}-#preset#),1)`;
+      }
+      if (!color) {
+        color = 'rgb(255, 255, 255)';
+      }
+      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile').style.setProperty('background-color', color, 'important');
+    } else if (domUtils.issetWidgetOptParam('#color#', 'color')) {
+      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile').style.setProperty('background-color', '#color#', 'important');
+    }
+    if (domUtils.issetWidgetOptParam('#titlefontcolor#', 'titlefontcolor')) {
+      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile .title').style.setProperty('color', '#titlefontcolor#', 'important')
+    }
+    if (domUtils.issetWidgetOptParam('#titlefontsize#', 'titlefontsize')) {
+      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile .title').style.setProperty('font-size', '#titlefontsize#', 'important')
+    }
+    if (domUtils.issetWidgetOptParam('#padding#', 'padding')) {
+      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile').style.setProperty('padding', '#padding#', 'important')
+    }
+    if (domUtils.issetWidgetOptParam('#width#', 'width')) {
+      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile').style.setProperty('width', '#width#', 'important')
+    }
+    if (domUtils.issetWidgetOptParam('#height#', 'height')) {
+      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile').style.setProperty('height', '#height#', 'important')
+    }
+    if (domUtils.issetWidgetOptParam('#borderradius#', 'borderradius')) {
+      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile').style.setProperty('border-radius', '#borderradius#', 'important')
+    }
+    if (domUtils.issetWidgetOptParam('#bordercolor#', 'bordercolor')) {
+      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile').style.setProperty('border-color', '#bordercolor#', 'important')
+    }
+    if (domUtils.issetWidgetOptParam('#borderwidth#', 'borderwidth')) {
+      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile').style.setProperty('border-width', '#borderwidth#', 'important')
+    }
+    if (domUtils.issetWidgetOptParam('#borderstyle#', 'borderstyle')) {
+      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile').style.setProperty('border-style', '#borderstyle#', 'important')
+    }
+    if (domUtils.issetWidgetOptParam('#margin#', 'margin')) {
+      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile .state').style.setProperty('margin-bottom', '#margin#', 'important')
+      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile .title').style.setProperty('margin-top', '#margin#', 'important')
+    }
+  </script>
+</div>
