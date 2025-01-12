@@ -1,0 +1,144 @@
+<div class="cmd cmd-widget reportModeHidden" data-type="action" data-subtype="slider" data-template="customtile" data-cmd_id="#id#" data-cmd_uid="#uid#" data-version="#version#" data-eqLogic_id="#eqLogic_id#">
+  <link type="text/css" rel="stylesheet" href="core/php/getCSS.php?file=desktop/custom/customTile.css">
+  <div class="customTile content">
+    <div class="title #hide_name#">
+      <div class="cmdName">#valueName#</div>
+    </div>
+    <span class="execute iconCmd tooltips cursor"></span>
+    <div id="widget_slider#id#" class="slider"></div>
+  </div>
+  <div class="timeCmd label label-default #value_history#" data-type="info" data-cmd_id="#value_id#"></div>
+
+  <template>
+    <div>transparency : 0|1 ({{Transparence de la couleur de fond}})</div>
+    <div>preset : heating|security|energy|light|opening|automatism|multimedia|default ({{Preset de catégorie de la commande (annule la couleur)}})</div>
+    <div>colortype : jeedom|analogues|complementaires|monochromatiques|foncees|pastel|vives|terre|type1|type2|type3|type4|type5 ({{Type de couleur du preset}})</div>
+    <div>step : 1 ({{Pas du changement de valeur}})</div>
+    <div>color : rgb(20,20,20) ({{Couleur de fond}})</div>
+    <div>iconcmd : ({{code html du logo}})</div>
+    <div>titlefontcolor : rgb(20,20,20) ({{Couleur du texte du titre}})</div>
+    <div>titlefontsize : NNpx ({{Taille de la police du titre}})</div>
+    <div>iconfontsize : NNpx ({{Taille de la police de l'icône}})</div>
+    <div>padding : NNpx ({{Taille de la tuile}})</div>
+    <div>width : NNpx ({{Largeur de la tuile}})</div>
+    <div>height : NNpx ({{Hauteur de la tuile}})</div>
+    <div>borderradius : NNpx ({{Taille de l'arrondi de la tuile}})</div>
+    <div>bordercolor : rgb(20,20,20) ({{Couleur de la bordure}})</div>
+    <div>borderwidth : NNpx ({{Épaisseur de la bordure}})</div>
+    <div>borderstyle : solid ({{Style de la bordure}})</div>
+    <div>margin : NNpx ({{Marge entre le titre/valeur et le haut/bas}})</div>
+    <div>style: ({{style CSS de la valeur}})</div>
+    <div>time : duration|date ({{Affiche durée ou date de la valeur}})</div>
+  </template>
+  <script>
+    window['mySlider#id#'] = domUtils.createWidgetSlider({
+      sliderDiv: document.getElementById('widget_slider#id#'),
+      state: ('#state#' == '') ? parseFloat('#minValue#') : '#state#',
+      min: parseFloat('#minValue#'),
+      max: parseFloat('#maxValue#'),
+      step: (domUtils.issetWidgetOptParam('#step#', 'step')) ? parseFloat('#step#') : 1,
+      tooltips: true,
+      format: true,
+      unite: '#unite#'
+    })
+
+    window['mySlider#id#'].on('change', function(values, handle) {
+      jeedom.cmd.execute({ id: '#id#', value: { slider: values[handle].replace('#unite#', '').trim() } })
+    })
+
+    document.querySelector('.cmd[data-cmd_uid="#uid#"] .execute').addEventListener('click', function() {
+      if (this.getAttribute('data-state') == 'on') {
+        jeedom.cmd.execute({ id: '#id#', value: { slider: parseFloat('#minValue#') } })
+      } else {
+        jeedom.cmd.execute({ id: '#id#', value: { slider: parseFloat('#maxValue#') } })
+      }
+    })
+
+    jeedom.cmd.addUpdateFunction('#id#', function(_options) {
+      if (is_object(cmd = document.querySelector('.cmd[data-cmd_uid="#uid#"]'))) {
+        cmd.querySelector('.content').setAttribute('title', '{{Valeur }} : ' + _options.display_value + '<br>{{Date de valeur}} : ' + _options.valueDate + '<br>{{Date de collecte}} : ' + _options.collectDate)        
+        if ('#time#' == 'duration' || '#time#' == 'date') {
+          jeedom.cmd.displayDuration(_options.valueDate, cmd.querySelector('.timeCmd'), '#time#')
+        }
+        console.log(_options)
+        if (_options.display_value != undefined) {
+          window['mySlider#id#'].set(_options.value)
+          let iconCmd = cmd.querySelector('.iconCmd')
+          if (_options.value > parseFloat('#minValue#')) {
+            iconCmd.innerHTML = domUtils.issetWidgetOptParam('#iconcmdon#', 'iconcmdon') ? '#iconcmdon#' : '<i class="icon_green far fas fa-check"></i>';
+            iconCmd.setAttribute('data-state', 'on')
+          } else {
+            iconCmd.innerHTML = domUtils.issetWidgetOptParam('#iconcmdoff#', 'iconcmdoff') ? '#iconcmdoff#' : '<i class="icon_red fas fa-times"></i>';
+            iconCmd.setAttribute('data-state', 'off')
+          }
+        }
+      }
+    })
+
+    jeedom.cmd.refreshValue([{ cmd_id: '#id#', display_value: '#state#', valueDate: '#valueDate#', collectDate: '#collectDate#', alertLevel: '#alertLevel#', unit: '#unite#' }])
+
+    if (domUtils.issetWidgetOptParam('#preset#', 'preset')) {
+      var colortype = 'jeedom';
+      if (domUtils.issetWidgetOptParam('#colortype#', 'colortype')) {
+          colortype = '#colortype#';
+      }
+
+      if (domUtils.issetWidgetOptParam('#transparency#', 'transparency')) {
+          var color = `rgba(var(--customtile-${colortype}-#preset#),#transparency#)`;
+      } else {
+          var color = `rgba(var(--customtile-${colortype}-#preset#),1)`;
+      }
+      if (!color) {
+          color = 'rgb(255, 255, 255)';
+      }
+      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile').style.setProperty('background-color', color, 'important');
+    } else if (domUtils.issetWidgetOptParam('#color#', 'color')) {
+      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile').style.setProperty('background-color', '#color#', 'important');
+    }
+
+    if (domUtils.issetWidgetOptParam('#style#', 'style')) {
+      var styles = '#style#'.split(';');
+      styles.forEach(style => {
+        var [property, value] = style.split(':');
+          if (property && value) {
+            document.querySelector('.cmd[data-cmd_uid="#uid#"] .execute').style.setProperty(property.trim(), value.trim(), 'important');
+          }
+      });
+    }
+
+    if (domUtils.issetWidgetOptParam('#titlefontcolor#', 'titlefontcolor')) {
+      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile .title').style.setProperty('color', '#titlefontcolor#', 'important')
+    }
+    if (domUtils.issetWidgetOptParam('#titlefontsize#', 'titlefontsize')) {
+      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile .title').style.setProperty('font-size', '#titlefontsize#', 'important')
+    }
+    if (domUtils.issetWidgetOptParam('#iconfontsize#', 'iconfontsize')) {
+      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile .execute > i').style.setProperty('font-size', '#iconfontsize#', 'important')
+    }
+    if (domUtils.issetWidgetOptParam('#padding#', 'padding')) {
+      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile').style.setProperty('padding', '#padding#', 'important')
+    }
+    if (domUtils.issetWidgetOptParam('#width#', 'width')) {
+      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile').style.setProperty('width', '#width#', 'important')
+    }
+    if (domUtils.issetWidgetOptParam('#height#', 'height')) {
+      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile').style.setProperty('height', '#height#', 'important')
+    }
+    if (domUtils.issetWidgetOptParam('#borderradius#', 'borderradius')) {
+      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile').style.setProperty('border-radius', '#borderradius#', 'important')
+    }
+    if (domUtils.issetWidgetOptParam('#bordercolor#', 'bordercolor')) {
+      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile').style.setProperty('border-color', '#bordercolor#', 'important')
+    }
+    if (domUtils.issetWidgetOptParam('#borderwidth#', 'borderwidth')) {
+      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile').style.setProperty('border-width', '#borderwidth#', 'important')
+    }
+    if (domUtils.issetWidgetOptParam('#borderstyle#', 'borderstyle')) {
+      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile').style.setProperty('border-style', '#borderstyle#', 'important')
+    }
+    if (domUtils.issetWidgetOptParam('#margin#', 'margin')) {
+      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile .state').style.setProperty('margin-bottom', '#margin#', 'important')
+      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile .title').style.setProperty('margin-top', '#margin#', 'important')
+    }
+  </script>
+</div>
