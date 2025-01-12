@@ -46,21 +46,19 @@
   <script>
     jeedom.cmd.addUpdateFunction('#id#', function(_options) {
       if (is_object(cmd = document.querySelector('.cmd[data-cmd_uid="#uid#"]'))) {
-        var integer = Math.floor(_options.display_value);
-        var decimal = Math.round((_options.display_value % 1) * 100);
-        var separator = '.';
-        if (domUtils.issetWidgetOptParam('#separator#', 'separator')) {
-            separator = '#separator#';
-        }
-        cmd.querySelector('.content').setAttribute('title', '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate)
+        var integer = Math.trunc(_options.display_value);
+        var decimal = Math.round(Math.abs(_options.display_value % 1) * 100);
+        var separator = domUtils.issetWidgetOptParam('#separator#', 'separator') ? '#separator#' : '.';
+
+        cmd.querySelector('.content').setAttribute('title', '{{Date de valeur}} : ' + _options.valueDate + '<br>{{Date de collecte}} : ' + _options.collectDate)
         if ('#time#' == 'duration' || '#time#' == 'date') {
           jeedom.cmd.displayDuration(_options.valueDate, cmd.querySelector('.timeCmd'), '#time#')
         }
 
         if (is_numeric(_options.value)) {
           cmd.querySelector('.value .int').innerHTML = integer;
-          cmd.querySelector('.value .sep').innerHTML = separator;
-          cmd.querySelector('.value .dec').innerHTML = decimal;
+          cmd.querySelector('.value .sep').innerHTML = decimal != 0 ? separator : '';
+          cmd.querySelector('.value .dec').innerHTML = decimal != 0 ? decimal : '';
           cmd.querySelector('.unit').innerHTML = _options.unit
         } else {
           cmd.querySelector('.value .int').innerHTML = '<span class="label label-danger">' + _options.value + '</span>';
@@ -84,7 +82,7 @@
         if (domUtils.issetWidgetOptParam('#style#', 'style')) {
           var styles = '#style#'.split(';');
           styles.forEach(style => {
-            let [property, value] = style.split(':');
+            var [property, value] = style.split(':');
               if (property && value) {
                 cmd.querySelector('.value').style.setProperty(property.trim(), value.trim(), 'important');
               }
