@@ -117,7 +117,6 @@
 	--customtile-type5-default: 255, 250, 205;
 
 }
-
 .cmd[data-template="customtile"] .customTile {
 	border-radius: 25px;
 	background: grey;
@@ -127,41 +126,50 @@
 	flex-direction: column;
 	justify-content: space-between;
 }
-
+.cmd[data-template="customtile"] .customTile .iconCmd > i {
+    font-size: 2em;
+}
 .cmd[data-template="customtile"] .customTile .title {
 	margin-top: 10%;
 	font-size: 1.5em;
 	text-align: center;
 }
-
 .cmd[data-template="customtile"] .customTile .title .cmdName {
 	color: white;
 }
-
 .cmd[data-template="customtile"] .customTile .state {
 	margin-bottom: 10%;
 	text-align: center;
 }
-
 .cmd[data-template="customtile"] .customTile .state .value {
-	font-size: 3em;
 	color: white;
+    letter-spacing: -1px;
 }
-
+.cmd[data-template="customtile"] .customTile .state .value .int,
+.cmd[data-template="customtile"] .customTile .state .value .sep {
+	font-size: 3em;
+}
+.cmd[data-template="customtile"] .customTile .state .value .dec {
+	font-size: 2em;
+}
 .cmd[data-template="customtile"] .customTile .state .unit {
 	font-size: 1em;
 	color: white;
 }
-
 .cmd[data-template="customtile"] .customTile .title .cmdName {
 	color: white;
 }
-
 .cmd[data-template="customtile"] .customTile .execute {
 	margin-bottom: 10%;
 	text-align: center;
 }
-
 .cmd[data-template="customtile"] .customTile .execute>i {
 	font-size: 2em;
+}
+.cmd[data-subtype="slider"][data-template="customtile"] .customTile .execute>i {
+	font-size: 1.5em;
+}
+
+.cmd[data-subtype="slider"][data-template="customtile"] .customTile .slider.noUi-horizontal {
+    margin-top: unset;
 }
