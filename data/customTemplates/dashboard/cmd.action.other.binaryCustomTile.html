@@ -4,7 +4,7 @@
     <div class="title #hide_name#">
       <div class="cmdName">#valueName#</div>
     </div>
-    <span class="execute iconCmd tooltips cursor" title="#name#"></span>
+    <span class="execute iconCmd tooltips cursor" title="#name#" data-cmd_id="#id#"></span>
   </div>
   <div class="timeCmd label label-default #value_history#" data-type="info" data-cmd_id="#value_id#"></div>
 
@@ -13,6 +13,7 @@
     <div>preset : heating|security|energy|light|opening|automatism|multimedia|default ({{Preset de catégorie de la commande (annule la couleur)}})</div>
     <div>colortype : jeedom|analogues|complementaires|monochromatiques|foncees|pastel|vives|terre|type1|type2|type3|type4|type5 ({{Type de couleur du preset}})</div>
     <div>color : rgb(20,20,20) ({{Couleur de fond}})</div>
+    <div>iconcmd : ({{code html du logo}})</div>
     <div>titlefontcolor : rgb(20,20,20) ({{Couleur du texte du titre}})</div>
     <div>titlefontsize : NNpx ({{Taille de la police du titre}})</div>
     <div>iconfontsize : NNpx ({{Taille de la police de l'icône}})</div>
@@ -24,6 +25,7 @@
     <div>borderwidth : NNpx ({{Épaisseur de la bordure}})</div>
     <div>borderstyle : solid ({{Style de la bordure}})</div>
     <div>margin : NNpx ({{Marge entre le titre/valeur et le haut/bas}})</div>
+    <div>style: ({{style CSS de la valeur}})</div>
     <div>time : duration|date ({{Affiche durée ou date de la valeur}})</div>
   </template>
   <script>
@@ -34,25 +36,26 @@
     })
     
     jeedom.cmd.addUpdateFunction('#id#', function(_options) {
+      console.log(_options.cmd_id, '#iconcmd#')
       if (is_object(cmd = document.querySelector('.cmd[data-cmd_uid="#uid#"]'))) {
-        cmd.querySelector('.content').setAttribute('title', '{{Date de valeur}}: ' + _options.valueDate + '<br>{{Date de collecte}}: ' + _options.collectDate)        
+        cmd.querySelector('.content').setAttribute('title', '{{Valeur }} : ' + _options.display_value + '<br>{{Date de valeur}} : ' + _options.valueDate + '<br>{{Date de collecte}} : ' + _options.collectDate)        
         if ('#time#' == 'duration' || '#time#' == 'date') {
           jeedom.cmd.displayDuration(_options.valueDate, cmd.querySelector('.timeCmd'), '#time#')
         }
 
         if (_options.display_value >= 1 || _options.display_value == 'on') {
-          if (jeedom.cmd.normalizeName('#name#') == 'off') {
-            cmd.unseen()
-          } else {
-            cmd.seen()
-            cmd.querySelector('.iconCmd').innerHTML = ('#name#' != '#name_display#') ? '#name_display#' : '<i class="icon_green far fas fa-check"></i>';
-          }
-        } else {
           if (jeedom.cmd.normalizeName('#name#') == 'on') {
             cmd.unseen()
           } else {
             cmd.seen()
-            cmd.querySelector('.iconCmd').innerHTML = ('#name#' != '#name_display#') ? '#name_display#' : '<i class="icon_red fas fa-times"></i>';
+            cmd.querySelector('.iconCmd').innerHTML = domUtils.issetWidgetOptParam('#iconcmd#', 'iconcmd') ? '#iconcmd#' : '<i class="icon_green far fas fa-check"></i>';
+          }
+        } else {
+          if (jeedom.cmd.normalizeName('#name#') == 'off') {
+            cmd.unseen()
+          } else {
+            cmd.seen()
+            cmd.querySelector('.iconCmd').innerHTML = domUtils.issetWidgetOptParam('#iconcmd#', 'iconcmd') ? '#iconcmd#' : '<i class="icon_red fas fa-times"></i>';
           }
         }
       }
@@ -60,29 +63,35 @@
 
     jeedom.cmd.refreshValue([{ cmd_id: '#id#', display_value: '#state#', valueDate: '#valueDate#', collectDate: '#collectDate#', alertLevel: '#alertLevel#', unit: '#unite#' }])
 
-    if ('#name#' != '#name_display#') {
-      cmd.querySelector('.execute').setAttribute('title', '#name#')
-    }
-
     if (domUtils.issetWidgetOptParam('#preset#', 'preset')) {
-        var colortype = 'jeedom';
-        if (domUtils.issetWidgetOptParam('#colortype#', 'colortype')) {
-            colortype = '#colortype#';
-        }
+      var colortype = 'jeedom';
+      if (domUtils.issetWidgetOptParam('#colortype#', 'colortype')) {
+          colortype = '#colortype#';
+      }
 
-        if (domUtils.issetWidgetOptParam('#transparency#', 'transparency')) {
-            var color = `rgba(var(--customtile-${colortype}-#preset#),#transparency#)`;
-        } else {
-            var color = `rgba(var(--customtile-${colortype}-#preset#),1)`;//getComputedStyle(document.documentElement).getPropertyValue(colorVarName);
-        }
-        if (!color) {
-            color = 'rgb(255, 255, 255)'; // Couleur par défaut si non défini
-        }
-
-        document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile').style.setProperty('background-color', color, 'important');
+      if (domUtils.issetWidgetOptParam('#transparency#', 'transparency')) {
+          var color = `rgba(var(--customtile-${colortype}-#preset#),#transparency#)`;
+      } else {
+          var color = `rgba(var(--customtile-${colortype}-#preset#),1)`;
+      }
+      if (!color) {
+          color = 'rgb(255, 255, 255)';
+      }
+      cmd.querySelector('.customTile').style.setProperty('background-color', color, 'important');
     } else if (domUtils.issetWidgetOptParam('#color#', 'color')) {
-        document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile').style.setProperty('background-color', '#color#', 'important');
+      cmd.querySelector('.customTile').style.setProperty('background-color', '#color#', 'important');
     }
+
+    if (domUtils.issetWidgetOptParam('#style#', 'style')) {
+      var styles = '#style#'.split(';');
+      styles.forEach(style => {
+        var [property, value] = style.split(':');
+          if (property && value) {
+            cmd.querySelector('.execute').style.setProperty(property.trim(), value.trim(), 'important');
+          }
+      });
+    }
+
     if (domUtils.issetWidgetOptParam('#titlefontcolor#', 'titlefontcolor')) {
       cmd.querySelector('.customTile .title').style.setProperty('color', '#titlefontcolor#', 'important')
     }
@@ -114,8 +123,8 @@
       cmd.querySelector('.customTile').style.setProperty('border-style', '#borderstyle#', 'important')
     }
     if (domUtils.issetWidgetOptParam('#margin#', 'margin')) {
-      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile .state').style.setProperty('margin-bottom', '#margin#', 'important')
-      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile .title').style.setProperty('margin-top', '#margin#', 'important')
+      cmd.querySelector('.customTile .state').style.setProperty('margin-bottom', '#margin#', 'important')
+      cmd.querySelector('.customTile .title').style.setProperty('margin-top', '#margin#', 'important')
     }
   </script>
 </div>
