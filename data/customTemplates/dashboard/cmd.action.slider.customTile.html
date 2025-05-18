@@ -5,6 +5,13 @@
       <div class="cmdName">#valueName#</div>
     </div>
     <span class="execute iconCmd tooltips cursor"></span>
+    <div class="state">
+      <span class="value">
+        <span class="int"></span>
+        <span class="sep"></span>
+        <span class="dec"></span>
+      </span> <span class="unit"></span>
+    </div>
     <div id="widget_slider#id#" class="slider"></div>
   </div>
   <div class="timeCmd label label-default #value_history#" data-type="info" data-cmd_id="#value_id#"></div>
@@ -16,9 +23,18 @@
     <div>step : 1 ({{Pas du changement de valeur}})</div>
     <div>color : rgb(20,20,20) ({{Couleur de fond}})</div>
     <div>iconcmd : ({{code html du logo}})</div>
+    <div>separator : .|, ({{Séparateur entier-décimal}})</div>
     <div>titlefontcolor : rgb(20,20,20) ({{Couleur du texte du titre}})</div>
     <div>titlefontsize : NNpx ({{Taille de la police du titre}})</div>
     <div>iconfontsize : NNpx ({{Taille de la police de l'icône}})</div>
+    <div>showvalue : 1 ({{Affiche la valeur numérique (pas de logo)}})</div>
+    <div>valueintfontcolor : rgb(20,20,20) ({{Couleur du texte de la valeur entière}})</div>
+    <div>valuesepfontcolor : rgb(20,20,20) ({{Couleur du texte du séparateur des valeurs}})</div>
+    <div>valuedecfontcolor : rgb(20,20,20) ({{Couleur du texte de la valeur décimale}})</div>
+    <div>unitfontcolor : rgb(20,20,20) ({{Couleur du texte de l'unité}})</div>
+    <div>valueintfontsize : NNpx ({{Taille de la police de la valeur entière}})</div>
+    <div>valuesepfontsize : NNpx ({{Taille de la police du séparateur des valeurs}})</div>
+    <div>valuedecfontsize : NNpx ({{Taille de la police de la valeur décimale}})</div>
     <div>padding : NNpx ({{Taille de la tuile}})</div>
     <div>width : NNpx ({{Largeur de la tuile}})</div>
     <div>height : NNpx ({{Hauteur de la tuile}})</div>
@@ -60,16 +76,80 @@
         if ('#time#' == 'duration' || '#time#' == 'date') {
           jeedom.cmd.displayDuration(_options.valueDate, cmd.querySelector('.timeCmd'), '#time#')
         }
-        console.log(_options)
         if (_options.display_value != undefined) {
-          window['mySlider#id#'].set(_options.value)
-          let iconCmd = cmd.querySelector('.iconCmd')
-          if (_options.value > parseFloat('#minValue#')) {
-            iconCmd.innerHTML = domUtils.issetWidgetOptParam('#iconcmdon#', 'iconcmdon') ? '#iconcmdon#' : '<i class="icon_green far fas fa-check"></i>';
-            iconCmd.setAttribute('data-state', 'on')
+          window['mySlider#id#'].set(_options.display_value)
+          if (_options.display_value > parseFloat('#minValue#')) {
+            if (domUtils.issetWidgetOptParam('#showvalue#', 'showvalue')) {
+              cmd.querySelector('.execute')?.remove();
+              var integer = Math.trunc(_options.display_value);
+              var decimal = Math.round(Math.abs(_options.display_value % 1) * 100);
+              var separator = domUtils.issetWidgetOptParam('#separator#', 'separator') ? '#separator#' : '.';
+              if (is_numeric(_options.display_value)) {
+                cmd.querySelector('.value .int').innerHTML = integer;
+                cmd.querySelector('.value .sep').innerHTML = decimal != 0 ? separator : '';
+                cmd.querySelector('.value .dec').innerHTML = decimal != 0 ? decimal : '';
+                cmd.querySelector('.unit').innerHTML = _options.unit
+              } else {
+                cmd.querySelector('.value .int').innerHTML = '<span class="label label-danger">' + _options.display_value + '</span>';
+                cmd.querySelector('.value .sep').innerHTML = '';
+                cmd.querySelector('.value .dec').innerHTML = '';
+              }
+
+              if (domUtils.issetWidgetOptParam('#blink#', 'blink')) {
+                if ('#blink#' == 'int' || '#blink#' == 'sep' || '#blink#' == 'dec') {
+                    var valueElement = cmd.querySelector('.value .#blink#');
+                } else {
+                    var valueElement = cmd.querySelector('.value');              
+                }
+                valueElement.style.color = 'var(--logo-primary-color)'
+                setTimeout(function() {
+                  valueElement.style.color = null
+                  jeedomUtils.initTooltips()
+                }, 1000);
+              }
+            } else {
+              let iconCmd = cmd.querySelector('.iconCmd')
+              cmd.querySelector('.state')?.remove();
+              iconCmd.innerHTML = domUtils.issetWidgetOptParam('#iconcmdon#', 'iconcmdon') ? '#iconcmdon#' : '<i class="icon_green far fas fa-check"></i>';
+              iconCmd.setAttribute('data-state', 'on');
+            }
           } else {
-            iconCmd.innerHTML = domUtils.issetWidgetOptParam('#iconcmdoff#', 'iconcmdoff') ? '#iconcmdoff#' : '<i class="icon_red fas fa-times"></i>';
-            iconCmd.setAttribute('data-state', 'off')
+            if (domUtils.issetWidgetOptParam('#showvalue#', 'showvalue')) {
+              cmd.querySelector('.execute')?.remove();
+              var integer = Math.trunc(_options.display_value);
+              var decimal = Math.round(Math.abs(_options.display_value % 1) * 100);
+              var separator = domUtils.issetWidgetOptParam('#separator#', 'separator') ? '#separator#' : '.';
+console.log(_options,cmd.querySelector('.value'))
+
+              if (is_numeric(_options.display_value)) {
+                cmd.querySelector('.value .int').innerHTML = integer;
+                cmd.querySelector('.value .sep').innerHTML = decimal != 0 ? separator : '';
+                cmd.querySelector('.value .dec').innerHTML = decimal != 0 ? decimal : '';
+                cmd.querySelector('.unit').innerHTML = _options.unit
+              } else {
+                cmd.querySelector('.value .int').innerHTML = '<span class="label label-danger">' + _options.value + '</span>';
+                cmd.querySelector('.value .sep').innerHTML = '';
+                cmd.querySelector('.value .dec').innerHTML = '';
+              }
+
+              if (domUtils.issetWidgetOptParam('#blink#', 'blink')) {
+                if ('#blink#' == 'int' || '#blink#' == 'sep' || '#blink#' == 'dec') {
+                    var valueElement = cmd.querySelector('.value .#blink#');
+                } else {
+                    var valueElement = cmd.querySelector('.value');              
+                }
+                valueElement.style.color = 'var(--logo-primary-color)'
+                setTimeout(function() {
+                  valueElement.style.color = null
+                  jeedomUtils.initTooltips()
+                }, 1000);
+              }
+            } else {
+              let iconCmd = cmd.querySelector('.iconCmd')
+              cmd.querySelector('.state')?.remove();
+              iconCmd.innerHTML = domUtils.issetWidgetOptParam('#iconcmdoff#', 'iconcmdoff') ? '#iconcmdoff#' : '<i class="icon_red fas fa-times"></i>';
+              iconCmd.setAttribute('data-state', 'off');
+            }
           }
         }
       }
@@ -139,6 +219,32 @@
     if (domUtils.issetWidgetOptParam('#margin#', 'margin')) {
       document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile .state').style.setProperty('margin-bottom', '#margin#', 'important')
       document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile .title').style.setProperty('margin-top', '#margin#', 'important')
+    }
+    if (domUtils.issetWidgetOptParam('#showvalue#', 'showvalue')) {
+      if (domUtils.issetWidgetOptParam('#valueintfontcolor#', 'valueintfontcolor')) {
+        document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile .state .value .int').style.setProperty('color', '#valueintfontcolor#', 'important')
+      }
+      if (domUtils.issetWidgetOptParam('#valuesepfontcolor#', 'valuesepfontcolor')) {
+        document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile .state .value .sep').style.setProperty('color', '#valuesepfontcolor#', 'important')
+      }
+      if (domUtils.issetWidgetOptParam('#valuedecfontcolor#', 'valuedecfontcolor')) {
+        document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile .state .value .dec').style.setProperty('color', '#valuedecfontcolor#', 'important')
+      }
+      if (domUtils.issetWidgetOptParam('#unitfontcolor#', 'unitfontcolor')) {
+        document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile .state .unit').style.setProperty('color', '#unitfontcolor#', 'important')
+      }
+      if (domUtils.issetWidgetOptParam('#valueintfontsize#', 'valueintfontsize')) {
+        document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile .state .value .int').style.setProperty('font-size', '#valueintfontsize#', 'important')
+      }
+      if (domUtils.issetWidgetOptParam('#valuesepfontsize#', 'valuesepfontsize')) {
+        document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile .state .value .sep').style.setProperty('font-size', '#valuesepfontsize#', 'important')
+      }
+      if (domUtils.issetWidgetOptParam('#valuedecfontsize#', 'valuedecfontsize')) {
+        document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile .state .value .dec').style.setProperty('font-size', '#valuedecfontsize#', 'important')
+      }
+      if (domUtils.issetWidgetOptParam('#unitfontsize#', 'unitfontsize')) {
+        document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile .state .unit').style.setProperty('font-size', '#unitfontsize#', 'important')
+      }
     }
   </script>
 </div>
