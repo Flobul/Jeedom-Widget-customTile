@@ -50,7 +50,7 @@
         var decimal = Math.round(Math.abs(_options.display_value % 1) * 100);
         var separator = domUtils.issetWidgetOptParam('#separator#', 'separator') ? '#separator#' : '.';
 
-        cmd.querySelector('.content').setAttribute('title', '{{Date de valeur}} : ' + _options.valueDate + '<br>{{Date de collecte}} : ' + _options.collectDate)
+        cmd.querySelector('.content')?.setAttribute('title', '{{Date de valeur}} : ' + _options.valueDate + '<br>{{Date de collecte}} : ' + _options.collectDate)
         if ('#time#' == 'duration' || '#time#' == 'date') {
           jeedom.cmd.displayDuration(_options.valueDate, cmd.querySelector('.timeCmd'), '#time#')
         }
@@ -84,7 +84,7 @@
           styles.forEach(style => {
             var [property, value] = style.split(':');
               if (property && value) {
-                cmd.querySelector('.value').style.setProperty(property.trim(), value.trim(), 'important');
+                cmd.querySelector('.value')?.style.setProperty(property.trim(), value.trim(), 'important');
               }
           });
         }
@@ -117,64 +117,64 @@
       if (!color) {
         color = 'rgb(255, 255, 255)';
       }
-      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile').style.setProperty('background-color', color, 'important');
+      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile')?.style.setProperty('background-color', color, 'important');
     } else if (domUtils.issetWidgetOptParam('#color#', 'color')) {
-      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile').style.setProperty('background-color', '#color#', 'important');
+      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile')?.style.setProperty('background-color', '#color#', 'important');
     }
     if (domUtils.issetWidgetOptParam('#titlefontcolor#', 'titlefontcolor')) {
-      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile .title').style.setProperty('color', '#titlefontcolor#', 'important')
+      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile .title')?.style.setProperty('color', '#titlefontcolor#', 'important')
     }
     if (domUtils.issetWidgetOptParam('#valueintfontcolor#', 'valueintfontcolor')) {
-      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile .state .value .int').style.setProperty('color', '#valueintfontcolor#', 'important')
+      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile .state .value .int')?.style.setProperty('color', '#valueintfontcolor#', 'important')
     }
     if (domUtils.issetWidgetOptParam('#valuesepfontcolor#', 'valuesepfontcolor')) {
-      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile .state .value .sep').style.setProperty('color', '#valuesepfontcolor#', 'important')
+      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile .state .value .sep')?.style.setProperty('color', '#valuesepfontcolor#', 'important')
     }
     if (domUtils.issetWidgetOptParam('#valuedecfontcolor#', 'valuedecfontcolor')) {
-      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile .state .value .dec').style.setProperty('color', '#valuedecfontcolor#', 'important')
+      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile .state .value .dec')?.style.setProperty('color', '#valuedecfontcolor#', 'important')
     }
     if (domUtils.issetWidgetOptParam('#unitfontcolor#', 'unitfontcolor')) {
-      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile .state .unit').style.setProperty('color', '#unitfontcolor#', 'important')
+      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile .state .unit')?.style.setProperty('color', '#unitfontcolor#', 'important')
     }
     if (domUtils.issetWidgetOptParam('#titlefontsize#', 'titlefontsize')) {
-      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile .title').style.setProperty('font-size', '#titlefontsize#', 'important')
+      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile .title')?.style.setProperty('font-size', '#titlefontsize#', 'important')
     }
     if (domUtils.issetWidgetOptParam('#valueintfontsize#', 'valueintfontsize')) {
-      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile .state .value .int').style.setProperty('font-size', '#valueintfontsize#', 'important')
+      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile .state .value .int')?.style.setProperty('font-size', '#valueintfontsize#', 'important')
     }
     if (domUtils.issetWidgetOptParam('#valuesepfontsize#', 'valuesepfontsize')) {
-      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile .state .value .sep').style.setProperty('font-size', '#valuesepfontsize#', 'important')
+      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile .state .value .sep')?.style.setProperty('font-size', '#valuesepfontsize#', 'important')
     }
     if (domUtils.issetWidgetOptParam('#valuedecfontsize#', 'valuedecfontsize')) {
-      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile .state .value .dec').style.setProperty('font-size', '#valuedecfontsize#', 'important')
+      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile .state .value .dec')?.style.setProperty('font-size', '#valuedecfontsize#', 'important')
     }
     if (domUtils.issetWidgetOptParam('#unitfontsize#', 'unitfontsize')) {
-      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile .state .unit').style.setProperty('font-size', '#unitfontsize#', 'important')
+      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile .state .unit')?.style.setProperty('font-size', '#unitfontsize#', 'important')
     }
     if (domUtils.issetWidgetOptParam('#padding#', 'padding')) {
-      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile').style.setProperty('padding', '#padding#', 'important')
+      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile')?.style.setProperty('padding', '#padding#', 'important')
     }
     if (domUtils.issetWidgetOptParam('#width#', 'width')) {
-      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile').style.setProperty('width', '#width#', 'important')
+      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile')?.style.setProperty('width', '#width#', 'important')
     }
     if (domUtils.issetWidgetOptParam('#height#', 'height')) {
-      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile').style.setProperty('height', '#height#', 'important')
+      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile')?.style.setProperty('height', '#height#', 'important')
     }
     if (domUtils.issetWidgetOptParam('#borderradius#', 'borderradius')) {
-      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile').style.setProperty('border-radius', '#borderradius#', 'important')
+      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile')?.style.setProperty('border-radius', '#borderradius#', 'important')
     }
     if (domUtils.issetWidgetOptParam('#bordercolor#', 'bordercolor')) {
-      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile').style.setProperty('border-color', '#bordercolor#', 'important')
+      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile')?.style.setProperty('border-color', '#bordercolor#', 'important')
     }
     if (domUtils.issetWidgetOptParam('#borderwidth#', 'borderwidth')) {
-      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile').style.setProperty('border-width', '#borderwidth#', 'important')
+      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile')?.style.setProperty('border-width', '#borderwidth#', 'important')
     }
     if (domUtils.issetWidgetOptParam('#borderstyle#', 'borderstyle')) {
-      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile').style.setProperty('border-style', '#borderstyle#', 'important')
+      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile')?.style.setProperty('border-style', '#borderstyle#', 'important')
     }
     if (domUtils.issetWidgetOptParam('#margin#', 'margin')) {
-      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile .state').style.setProperty('margin-bottom', '#margin#', 'important')
-      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile .title').style.setProperty('margin-top', '#margin#', 'important')
+      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile .state')?.style.setProperty('margin-bottom', '#margin#', 'important')
+      document.querySelector('.cmd[data-cmd_uid="#uid#"] .customTile .title')?.style.setProperty('margin-top', '#margin#', 'important')
     }
   </script>
 </div>
