@@ -36,9 +36,8 @@
     })
     
     jeedom.cmd.addUpdateFunction('#id#', function(_options) {
-      console.log(_options.cmd_id, '#iconcmd#')
       if (is_object(cmd = document.querySelector('.cmd[data-cmd_uid="#uid#"]'))) {
-        cmd.querySelector('.content').setAttribute('title', '{{Valeur }} : ' + _options.display_value + '<br>{{Date de valeur}} : ' + _options.valueDate + '<br>{{Date de collecte}} : ' + _options.collectDate)        
+        cmd.querySelector('.content')?.setAttribute('title', '{{Valeur }} : ' + _options.display_value + '<br>{{Date de valeur}} : ' + _options.valueDate + '<br>{{Date de collecte}} : ' + _options.collectDate)        
         if ('#time#' == 'duration' || '#time#' == 'date') {
           jeedom.cmd.displayDuration(_options.valueDate, cmd.querySelector('.timeCmd'), '#time#')
         }
@@ -77,9 +76,9 @@
       if (!color) {
           color = 'rgb(255, 255, 255)';
       }
-      cmd.querySelector('.customTile').style.setProperty('background-color', color, 'important');
+      cmd.querySelector('.customTile')?.style.setProperty('background-color', color, 'important');
     } else if (domUtils.issetWidgetOptParam('#color#', 'color')) {
-      cmd.querySelector('.customTile').style.setProperty('background-color', '#color#', 'important');
+      cmd.querySelector('.customTile')?.style.setProperty('background-color', '#color#', 'important');
     }
 
     if (domUtils.issetWidgetOptParam('#style#', 'style')) {
@@ -93,38 +92,38 @@
     }
 
     if (domUtils.issetWidgetOptParam('#titlefontcolor#', 'titlefontcolor')) {
-      cmd.querySelector('.customTile .title').style.setProperty('color', '#titlefontcolor#', 'important')
+      cmd.querySelector('.customTile .title .cmdName')?.style.setProperty('color', '#titlefontcolor#', 'important')
     }
     if (domUtils.issetWidgetOptParam('#titlefontsize#', 'titlefontsize')) {
-      cmd.querySelector('.customTile .title').style.setProperty('font-size', '#titlefontsize#', 'important')
+      cmd.querySelector('.customTile .title .cmdName')?.style.setProperty('font-size', '#titlefontsize#', 'important')
     }
     if (domUtils.issetWidgetOptParam('#iconfontsize#', 'iconfontsize')) {
-      cmd.querySelector('.customTile .execute > i').style.setProperty('font-size', '#iconfontsize#', 'important')
+      cmd.querySelector('.customTile .execute > i')?.style.setProperty('font-size', '#iconfontsize#', 'important')
     }
     if (domUtils.issetWidgetOptParam('#padding#', 'padding')) {
-      cmd.querySelector('.customTile').style.setProperty('padding', '#padding#', 'important')
+      cmd.querySelector('.customTile')?.style.setProperty('padding', '#padding#', 'important')
     }
     if (domUtils.issetWidgetOptParam('#width#', 'width')) {
-      cmd.querySelector('.customTile').style.setProperty('width', '#width#', 'important')
+      cmd.querySelector('.customTile')?.style.setProperty('width', '#width#', 'important')
     }
     if (domUtils.issetWidgetOptParam('#height#', 'height')) {
-      cmd.querySelector('.customTile').style.setProperty('height', '#height#', 'important')
+      cmd.querySelector('.customTile')?.style.setProperty('height', '#height#', 'important')
     }
     if (domUtils.issetWidgetOptParam('#borderradius#', 'borderradius')) {
-      cmd.querySelector('.customTile').style.setProperty('border-radius', '#borderradius#', 'important')
+      cmd.querySelector('.customTile')?.style.setProperty('border-radius', '#borderradius#', 'important')
     }
     if (domUtils.issetWidgetOptParam('#bordercolor#', 'bordercolor')) {
-      cmd.querySelector('.customTile').style.setProperty('border-color', '#bordercolor#', 'important')
+      cmd.querySelector('.customTile')?.style.setProperty('border-color', '#bordercolor#', 'important')
     }
     if (domUtils.issetWidgetOptParam('#borderwidth#', 'borderwidth')) {
-      cmd.querySelector('.customTile').style.setProperty('border-width', '#borderwidth#', 'important')
+      cmd.querySelector('.customTile')?.style.setProperty('border-width', '#borderwidth#', 'important')
     }
     if (domUtils.issetWidgetOptParam('#borderstyle#', 'borderstyle')) {
-      cmd.querySelector('.customTile').style.setProperty('border-style', '#borderstyle#', 'important')
+      cmd.querySelector('.customTile')?.style.setProperty('border-style', '#borderstyle#', 'important')
     }
     if (domUtils.issetWidgetOptParam('#margin#', 'margin')) {
-      cmd.querySelector('.customTile .state').style.setProperty('margin-bottom', '#margin#', 'important')
-      cmd.querySelector('.customTile .title').style.setProperty('margin-top', '#margin#', 'important')
+      cmd.querySelector('.customTile .state')?.style.setProperty('margin-bottom', '#margin#', 'important')
+      cmd.querySelector('.customTile .title')?.style.setProperty('margin-top', '#margin#', 'important')
     }
   </script>
 </div>
