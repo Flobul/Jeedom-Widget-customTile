@@ -42,7 +42,7 @@ You can customize the appearance of the tile using the following options:
 To install the custom tile widget, follow these steps:
 
 1. Copy the HTML file(s) to `data/customTemplates/dashboard/`.
-2. Copy the CSS file to `desktop/custom/`.
+2. Copy the CSS file to `data/custom/`.
 
 ## Preset palette
 Here is the color palette used for the presets:
